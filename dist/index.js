@@ -42,8 +42,23 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var fastify_1 = __importDefault(require("fastify"));
 var dateType_1 = require("./dateType");
 var getSubscription_1 = require("./getSubscription");
+var yargs_1 = __importDefault(require("yargs"));
+var helpers_1 = require("yargs/helpers");
+var args = yargs_1.default(helpers_1.hideBin(process.argv))
+    .option("port", {
+    description: "The port to bind on, default 3000.",
+    type: "number",
+    default: 3000,
+})
+    .option("verbose", {
+    alias: "v",
+    type: "boolean",
+    description: "Display detailed logs.",
+})
+    .help()
+    .parse();
 var server = fastify_1.default({
-    logger: true
+    logger: args.verbose
 });
 server.get("/DateType", function (request, response) { return __awaiter(void 0, void 0, void 0, function () {
     var baseUrl, scheme, extension, i, url, result, err_1;
@@ -72,7 +87,7 @@ server.get("/DateType", function (request, response) { return __awaiter(void 0, 
                 return [3 /*break*/, 6];
             case 4:
                 err_1 = _a.sent();
-                console.error(err_1);
+                console.error("Failed with Axios Error [" + err_1.code + "]. ");
                 return [3 /*break*/, 5];
             case 5:
                 i++;
@@ -83,24 +98,25 @@ server.get("/DateType", function (request, response) { return __awaiter(void 0, 
         }
     });
 }); });
-var start = function () { return __awaiter(void 0, void 0, void 0, function () {
+var start = function (port) { return __awaiter(void 0, void 0, void 0, function () {
     var err_2;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, server.listen({ port: 3000 })];
+                console.log("Server starts listening on port " + port + ".");
+                return [4 /*yield*/, server.listen({ port: port })];
             case 1:
                 _a.sent();
                 return [3 /*break*/, 3];
             case 2:
                 err_2 = _a.sent();
-                server.log.error(err_2);
+                console.error(err_2);
                 process.exit(1);
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
         }
     });
 }); };
-start();
+start(args.port);
 //# sourceMappingURL=index.js.map

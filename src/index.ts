@@ -2,8 +2,26 @@ import fastify from "fastify"
 import { DateType, parseDateType } from "./dateType"
 import { getSubscription } from "./getSubscription"
 
+import yargs from "yargs"
+import { hideBin } from "yargs/helpers"
+import { AxiosError } from "axios"
+
+let args = yargs(hideBin(process.argv))
+  .option("port", {
+    description: "The port to bind on, default 3000.",
+    type: "number",
+    default: 3000,
+  })
+  .option("verbose", {
+    alias: "v",
+    type: "boolean",
+    description: "Display detailed logs.",
+  })
+  .help()
+  .parse()
+
 const server = fastify({
-  logger: true
+  logger: (args as any).verbose
 })
 
 // DateType route
@@ -33,20 +51,21 @@ server.get<{
       response.status(200).send(result.data);
       break
     } catch (err) {
-      console.error(err);
+      console.error(`Failed with Axios Error [${(err as AxiosError).code}]. `);
       continue
     }
   }
   response.status(500).send("Fail to load from remote. ")
 })
 
-const start = async () => {
+const start = async (port : number) => {
   try {
-    await server.listen({ port: 3000 })
+    console.log(`Server starts listening on port ${port}.`)
+    await server.listen({ port: port })
   } catch(err) {
-    server.log.error(err)
+    console.error(err)
     process.exit(1)
   }
 }
 
-start()
+start((args as any).port)
