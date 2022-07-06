@@ -3,6 +3,7 @@
     "axios": "^0.27.2",
     "dotenv": "^16.0.1",
     "fastify": "^4.2.0",
+    "typescript": "^4.7.4",
     "yargs": "^17.5.1"
   },
   "devDependencies": {
