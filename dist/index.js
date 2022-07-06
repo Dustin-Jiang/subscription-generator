@@ -1,4 +1,23 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -40,8 +59,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var fastify_1 = __importDefault(require("fastify"));
-var dateType_1 = require("./dateType");
-var getSubscription_1 = require("./getSubscription");
 var yargs_1 = __importDefault(require("yargs"));
 var helpers_1 = require("yargs/helpers");
 var args = yargs_1.default(helpers_1.hideBin(process.argv))
@@ -58,48 +75,11 @@ var args = yargs_1.default(helpers_1.hideBin(process.argv))
     .help()
     .parse();
 var server = fastify_1.default({
-    logger: args.verbose
+    logger: args.verbose,
 });
-server.get("/DateType", function (request, response) { return __awaiter(void 0, void 0, void 0, function () {
-    var baseUrl, scheme, extension, i, url, result, err_1;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                baseUrl = request.query.baseUrl;
-                scheme = request.query.scheme.split("/") || ["yymmdd"];
-                extension = request.query.extension || "";
-                if (baseUrl.at(-1) !== "/")
-                    baseUrl += "/";
-                i = 0;
-                _a.label = 1;
-            case 1:
-                if (!(i < 5)) return [3 /*break*/, 6];
-                url = baseUrl +
-                    dateType_1.parseDateType(scheme, i) +
-                    (extension ? "." + extension : "");
-                _a.label = 2;
-            case 2:
-                _a.trys.push([2, 4, , 5]);
-                return [4 /*yield*/, getSubscription_1.getSubscription(url)];
-            case 3:
-                result = _a.sent();
-                response.status(200).send(result.data);
-                return [3 /*break*/, 6];
-            case 4:
-                err_1 = _a.sent();
-                console.error("Failed with Axios Error [" + err_1.code + "]. ");
-                return [3 /*break*/, 5];
-            case 5:
-                i++;
-                return [3 /*break*/, 1];
-            case 6:
-                response.status(500).send("Fail to load from remote. ");
-                return [2 /*return*/];
-        }
-    });
-}); });
+server.register(Promise.resolve().then(function () { return __importStar(require("./app")); }));
 var start = function (port) { return __awaiter(void 0, void 0, void 0, function () {
-    var err_2;
+    var err_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -110,8 +90,8 @@ var start = function (port) { return __awaiter(void 0, void 0, void 0, function 
                 _a.sent();
                 return [3 /*break*/, 3];
             case 2:
-                err_2 = _a.sent();
-                console.error(err_2);
+                err_1 = _a.sent();
+                console.error(err_1);
                 process.exit(1);
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];

@@ -1,23 +1,4 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -58,26 +39,52 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-// 读取 .env 文件
-var dotenv = __importStar(require("dotenv"));
-dotenv.config();
-// 引入 Fastify 框架
-var fastify_1 = __importDefault(require("fastify"));
-// 实例化 Fastify
-var app = fastify_1.default({
-    logger: true,
-});
-// 将应用注册为一个常规插件
-app.register(Promise.resolve().then(function () { return __importStar(require("../src/app")); }));
-exports.default = (function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, app.ready()];
-            case 1:
-                _a.sent();
-                app.server.emit("request", req, res);
-                return [2 /*return*/];
-        }
+var dateType_1 = require("./dateType");
+var getSubscription_1 = require("./getSubscription");
+var fs_1 = __importDefault(require("fs"));
+exports.default = (function (server, options, done) {
+    server.get("/", function (request, response) {
+        response.header("Content-Type", "text/html");
+        response.send(fs_1.default.createReadStream("./src/README.html", "utf-8"));
     });
-}); });
-//# sourceMappingURL=serverless.js.map
+    server.get("/DateType", function (request, response) { return __awaiter(void 0, void 0, void 0, function () {
+        var baseUrl, scheme, extension, i, url, result, err_1;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    baseUrl = request.query.baseUrl;
+                    scheme = request.query.scheme.split("/") || ["yymmdd"];
+                    extension = request.query.extension || "";
+                    if (baseUrl.at(-1) !== "/")
+                        baseUrl += "/";
+                    i = 0;
+                    _a.label = 1;
+                case 1:
+                    if (!(i < 5)) return [3 /*break*/, 6];
+                    url = baseUrl +
+                        dateType_1.parseDateType(scheme, i) +
+                        (extension ? "." + extension : "");
+                    _a.label = 2;
+                case 2:
+                    _a.trys.push([2, 4, , 5]);
+                    return [4 /*yield*/, getSubscription_1.getSubscription(url)];
+                case 3:
+                    result = _a.sent();
+                    response.status(200).send(result.data);
+                    return [3 /*break*/, 6];
+                case 4:
+                    err_1 = _a.sent();
+                    console.error("Failed with Axios Error [" + err_1.code + "]. ");
+                    return [3 /*break*/, 5];
+                case 5:
+                    i++;
+                    return [3 /*break*/, 1];
+                case 6:
+                    response.status(500).send("Fail to load from remote. ");
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    done();
+});
+//# sourceMappingURL=app.js.map

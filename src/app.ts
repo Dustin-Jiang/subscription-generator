@@ -4,6 +4,8 @@ import { getSubscription } from "./getSubscription";
 import { AxiosError } from "axios";
 import { FastifyInstance } from "fastify";
 
+import fs from "fs"
+
 export default (server : FastifyInstance, options: any, done: Function) => {
   // DateType route
   interface IDateType {
@@ -11,6 +13,11 @@ export default (server : FastifyInstance, options: any, done: Function) => {
     scheme: DateType;
     extension: string;
   }
+
+  server.get("/", (request, response) => {
+    response.header("Content-Type", "text/html")
+    response.send(fs.createReadStream("./src/README.html", "utf-8"));
+  })
 
   server.get<{
     Querystring: IDateType;

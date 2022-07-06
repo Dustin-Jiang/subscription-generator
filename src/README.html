@@ -1,0 +1,30 @@
+<h1 id="subscription-generator">Subscription Generator</h1>
+<p>Generate a constant subscription for v2ray from subscription URLs changed in certain patterns.</p>
+<h2 id="installation">Installation</h2>
+<p>If you manage your package by <code>yarn</code>, using</p>
+<pre><code>yarn install
+yarn start</code></pre>
+<p>else, using</p>
+<pre><code>npm install
+npm start</code></pre>
+<p>to install the dependencies and then run it.</p>
+<p>The default port is <code>3000</code>, and you can change it by argument <code>--port</code>.</p>
+<pre><code>yarn start --port [port]</code></pre>
+<h2 id="usage">Usage</h2>
+<h3 id="time-based-scheme">Time-based scheme</h3>
+<p>For the urls of the source generated from date, use <code>/DateType?baseUrl=[baseUrl]&amp;scheme=[scheme]&amp;extension=[extension]</code>.</p>
+<pre><code>baseUrl     constant part of the URLs
+scheme      variable part in date
+            you can seperate multiple parts using a &#39;/&#39;
+
+            Formats:
+
+            yymmdd
+            YYYYmmdd
+            yymm
+            YYYYmm
+
+extension   if the file has an extension name</code></pre>
+<p>Eg. To get a subscrible-able link of <code>https://example.com/foo/bar/197001/19700101.txt</code>, you can use <code>/DateType?baseUrl=https://example.com/foo/bar&amp;scheme=YYYYmm/YYYYmmdd&amp;extension=txt</code>.</p>
+<h1 id="license">License</h1>
+<p>This program is under LGPLv3 license.</p>
