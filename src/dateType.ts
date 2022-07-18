@@ -13,10 +13,10 @@ export function parseDateType (
   let result = deepCopy(scheme) as string[]
 
   for (let i in result) {
-    result[i] = result[i].replace("yy", time.getUTCFullYear().toString().substring(2))
+    result[i] = result[i].replace("yy", time.getUTCFullYear().toString().slice(2))
     result[i] = result[i].replace("YYYY", time.getUTCFullYear().toString())
-    result[i] = result[i].replace("mm", ("0" + (time.getUTCMonth() + 1).toString()).substring(-2))
-    result[i] = result[i].replace("dd", ("0" + time.getUTCDate().toString()).substring(-2))
+    result[i] = result[i].replace("mm", ("0" + (time.getUTCMonth() + 1).toString()).slice(-2))
+    result[i] = result[i].replace("dd", ("0" + time.getUTCDate().toString()).slice(-2))
   }
 
   return result.join("/")

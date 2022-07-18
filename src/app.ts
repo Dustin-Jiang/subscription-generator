@@ -16,7 +16,7 @@ export default (server : FastifyInstance, options: any, done: Function) => {
 
   server.get("/", (request, response) => {
     response.header("Content-Type", "text/html")
-    response.send(fs.createReadStream("./README.html", "utf-8"));
+    response.send(fs.createReadStream("./src/README.html", "utf-8"));
   })
 
   server.get<{
