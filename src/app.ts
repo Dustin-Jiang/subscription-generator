@@ -1,10 +1,11 @@
 import { DateType, parseDateType } from "./dateType";
-import { getSubscription } from "./getSubscription";
+import { getSubscription, RequestError } from "./getSubscription";
 
 import { AxiosError } from "axios";
 import { FastifyInstance } from "fastify";
 
 import fs from "fs"
+import parseUrlFileType, { ParseError } from "./urlFileType";
 
 export default (server : FastifyInstance, options: any, done: Function) => {
   // DateType route
@@ -12,6 +13,11 @@ export default (server : FastifyInstance, options: any, done: Function) => {
     baseUrl: string;
     scheme: DateType;
     extension: string;
+  }
+
+  interface IFileType {
+    pageUrl: string;
+    selector: string;
   }
 
   server.get("/", (request, response) => {
@@ -47,6 +53,30 @@ export default (server : FastifyInstance, options: any, done: Function) => {
     }
     response.status(500).send("Fail to load from remote. ");
   });
+
+  server.get<{
+    Querystring: IFileType;
+  }>("/FileType", async (request, response) => {
+    let pageUrl = request.query.pageUrl;
+    let selector = request.query.selector;
+
+    try {
+      let result = await parseUrlFileType(pageUrl, selector)
+      response.send(result)
+      return ;
+    } catch (e) {
+      if (e instanceof ParseError) {
+        console.warn(e.message)
+        response.status(404).send(e.message)
+        return ;
+      }
+      if (e instanceof RequestError) {
+        console.warn(e.message)
+        response.status(500).send(e.message)
+        return ;
+      }
+    }
+  })
 
   done()
 };
