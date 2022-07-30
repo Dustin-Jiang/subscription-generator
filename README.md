@@ -47,7 +47,18 @@ scheme      variable part in date
 extension   if the file has an extension name
 ```
 
-Eg. To get a subscrible-able link of `https://example.com/foo/bar/197001/19700101.txt`, you can use `/DateType?baseUrl=https://example.com/foo/bar&scheme=YYYYmm/YYYYmmdd&extension=txt`.
+**Eg.** To get a subscrible-able link of `https://example.com/foo/bar/197001/19700101.txt`, you can use `/DateType?baseUrl=https://example.com/foo/bar&scheme=YYYYmm/YYYYmmdd&extension=txt`.
+
+### File URL Scheme
+
+Some provider will distribute their subscription on a certain web page, forcing you to visit its site regularly. To get a constant subscription link, use `FileType?baseUrl=[baseUrl]&selector=[selector]`.
+
+```
+baseUrl     constant web page
+selector    CSS selector to the element contains the URL
+```
+
+**Eg.** To get the file URL in element `.foo > bar`, you can use `FileType?baseUrl=https://example.com/foo.html&selector=.foo>bar`.
 
 # License
 
